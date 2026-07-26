@@ -6,20 +6,22 @@ Network Solutions manages the domain and DNS. It does not automatically host thi
 
 The Network Solutions password was shared in chat. Change that password before updating DNS or giving access to anyone else.
 
-## Recommended Hosting
+## Recommended Free Hosting
 
-Use a Node-capable host such as Render or Railway. This project includes `render.yaml` for Render.
+Use Vercel. This project includes `vercel.json` and Vercel serverless functions in `api/`.
 
 Build command:
 
 ```bash
-npm install && npm run build
+npm run build
 ```
 
-Start command:
+Vercel settings:
 
-```bash
-npm start
+```text
+Framework Preset: Vite
+Build Command: npm run build
+Output Directory: dist
 ```
 
 Environment variables:
@@ -36,13 +38,13 @@ SMTP_PASS=
 
 ## Network Solutions DNS
 
-After the app is deployed, the host will provide DNS records.
+After the app is deployed, Vercel will provide DNS records.
 
 Typical records:
 
 ```text
-CNAME  www  your-host-name-from-render-or-railway
-A      @    host-provided-ip-address
+CNAME  www  cname.vercel-dns.com
+A      @    76.76.21.21
 ```
 
 In Network Solutions:

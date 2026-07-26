@@ -47,7 +47,17 @@ npm run build
 npm start
 ```
 
-For deployment, point the purchased domain DNS to the hosting provider. The backend must run on a Node-capable host such as Render, Railway, Fly.io, DigitalOcean, VPS hosting, or a similar service. Static-only hosting will not run the email backend.
+For deployment on Vercel, import the GitHub repo and use the default Vite settings. The `api/` folder contains Vercel serverless functions for the contact form.
+
+Vercel settings:
+
+```text
+Framework Preset: Vite
+Build Command: npm run build
+Output Directory: dist
+```
+
+Add the environment variables from `.env.example` in Vercel Project Settings.
 
 ## Company Details
 
