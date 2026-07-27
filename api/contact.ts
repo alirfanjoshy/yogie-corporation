@@ -75,7 +75,7 @@ async function sendInquiryEmail(inquiry: Record<string, string>) {
   await transporter.sendMail({
     to:
       process.env.CONTACT_TO ??
-      "liptonmouran@yogiecorporation.com, akhter@yogiecorporation.com",
+      "Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com",
     from: process.env.CONTACT_FROM ?? process.env.SMTP_USER,
     replyTo: inquiry.email,
     subject: `New YOGIE CORPORATION inquiry: ${inquiry.product}`,

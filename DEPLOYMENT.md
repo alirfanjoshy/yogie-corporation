@@ -27,8 +27,8 @@ Output Directory: dist
 Environment variables:
 
 ```text
-CONTACT_TO=liptonmouran@yogiecorporation.com, akhter@yogiecorporation.com
-CONTACT_FROM=website@yogiecorporation.com
+CONTACT_TO=Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com
+CONTACT_FROM=yogie@yogiecorp.com
 SMTP_HOST=
 SMTP_PORT=587
 SMTP_SECURE=false

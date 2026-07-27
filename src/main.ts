@@ -7,8 +7,9 @@ const contacts = [
 ];
 
 const emails = [
-  { label: "Lipton", email: "liptonmouran@yogiecorporation.com" },
-  { label: "Akhter", email: "akhter@yogiecorporation.com" }
+  { label: "Lipton", email: "Liptonmourin@yogiecorp.com" },
+  { label: "Akhtar", email: "akhtar@yogiecorp.com" },
+  { label: "Yogie", email: "yogie@yogiecorp.com" }
 ];
 
 const products = [
@@ -63,7 +64,7 @@ const products = [
 ];
 
 const processSteps = [
-  [, "Inquiry Review", "Product, quantity, destination, packaging, and timeline are confirmed before pricing discussion."],
+  ["01", "Inquiry Review", "Product, quantity, destination, packaging, and timeline are confirmed before pricing discussion."],
   ["02", "Source & Offer", "Available supply, commercial terms, documents, and shipment options are organized for review."],
   ["03", "Coordination", "Buyer, supplier, and logistics details are followed through until the order is ready to move."]
 ];
@@ -73,7 +74,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <div class="top-bar">
       <div>
         <span>Queens, NY</span>
-        <a href="mailto:liptonmouran@yogiecorporation.com">liptonmouran@yogiecorporation.com</a>
+        <a href="mailto:Liptonmourin@yogiecorp.com">Liptonmourin@yogiecorp.com</a>
       </div>
       <a href="tel:+17187912781">Commercial desk: 718-791-2781</a>
     </div>
@@ -202,7 +203,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
         <div class="inquiry-intro">
           <p class="eyebrow">Inquiry</p>
           <h2>Request a Quote</h2>
-          <p>Send the product requirement, quantity, destination, packaging preference, and target schedule. The inquiry goes to Lipton and Akhter once SMTP is configured.</p>
+          <p>Send the product requirement, quantity, destination, packaging preference, and target schedule. The inquiry goes to Lipton, Akhtar, and Yogie once SMTP is configured.</p>
           <div class="quote-checklist">
             <span>Product specification</span>
             <span>Quantity and destination</span>

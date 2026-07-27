@@ -84,7 +84,7 @@ async function sendInquiryEmail(inquiry: Record<string, string>) {
 
   const to =
     process.env.CONTACT_TO ??
-    "liptonmouran@yogiecorporation.com, akhter@yogiecorporation.com";
+    "Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com";
   const from = process.env.CONTACT_FROM ?? process.env.SMTP_USER;
 
   await transporter.sendMail({

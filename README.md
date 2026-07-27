@@ -29,8 +29,8 @@ cp .env.example .env
 Important values:
 
 ```text
-CONTACT_TO=liptonmouran@yogiecorporation.com, akhter@yogiecorporation.com
-CONTACT_FROM=website@yogiecorporation.com
+CONTACT_TO=Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com
+CONTACT_FROM=yogie@yogiecorp.com
 SMTP_HOST=
 SMTP_PORT=587
 SMTP_SECURE=false
@@ -70,5 +70,6 @@ Contacts:
 - Lipton: 718-791-2781
 - Yogie: 347-635-9098
 - Akhter: 929-327-3357
-- Lipton email: liptonmouran@yogiecorporation.com
-- Akhter email: akhter@yogiecorporation.com
+- Lipton email: Liptonmourin@yogiecorp.com
+- Akhtar email: akhtar@yogiecorp.com
+- Yogie email: yogie@yogiecorp.com

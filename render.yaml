@@ -9,9 +9,9 @@ services:
       - key: NODE_ENV
         value: production
       - key: CONTACT_TO
-        value: liptonmouran@yogiecorporation.com, akhter@yogiecorporation.com
+        value: Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com
       - key: CONTACT_FROM
-        value: website@yogiecorporation.com
+        value: yogie@yogiecorp.com
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
