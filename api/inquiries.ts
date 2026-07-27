@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 type InquiryPayload = {
   name?: unknown;
@@ -35,14 +35,7 @@ const allowedOrigins = new Set([
 const clean = (value: unknown) =>
   typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
 
-const hasSmtpConfig = () =>
-  Boolean(
-    process.env.SMTP_HOST &&
-      process.env.SMTP_USER &&
-      process.env.SMTP_PASS &&
-      process.env.SMTP_FROM &&
-      process.env.INQUIRY_RECIPIENT
-  );
+const hasEmailConfig = () => Boolean(process.env.RESEND_API_KEY && process.env.INQUIRY_RECIPIENT);
 
 function setCorsHeaders(req: VercelRequest, res: VercelResponse) {
   const origin = req.headers?.origin;
@@ -91,23 +84,17 @@ function validateInquiry(body: InquiryPayload = {}) {
 }
 
 async function sendInquiryEmail(inquiry: Record<string, string>) {
-  if (!hasSmtpConfig()) {
-    throw new Error("SMTP is not configured.");
+  if (!hasEmailConfig()) {
+    throw new Error("Resend is not configured.");
   }
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: process.env.SMTP_SECURE === "true",
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
+  const resendApiKey = process.env.RESEND_API_KEY as string;
+  const inquiryRecipient = process.env.INQUIRY_RECIPIENT as string;
+  const resend = new Resend(resendApiKey);
 
-  await transporter.sendMail({
-    to: process.env.INQUIRY_RECIPIENT,
-    from: process.env.SMTP_FROM,
+  const { error } = await resend.emails.send({
+    to: inquiryRecipient,
+    from: "Yogie Website <inquiries@yogiecorp.com>",
     replyTo: inquiry.email,
     subject: `New YOGIE CORPORATION inquiry: ${inquiry.product}`,
     text: [
@@ -121,6 +108,10 @@ async function sendInquiryEmail(inquiry: Record<string, string>) {
       inquiry.message
     ].join("\n")
   });
+
+  if (error) {
+    throw new Error(error.message);
+  }
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

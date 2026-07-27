@@ -203,7 +203,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
         <div class="inquiry-intro">
           <p class="eyebrow">Inquiry</p>
           <h2>Request a Quote</h2>
-          <p>Send the product requirement, quantity, destination, packaging preference, and target schedule. The inquiry goes to Lipton, Akhtar, and Yogie once SMTP is configured.</p>
+          <p>Send the product requirement, quantity, destination, packaging preference, and target schedule. The inquiry goes to Lipton, Akhtar, and Yogie once email delivery is configured.</p>
           <div class="quote-checklist">
             <span>Product specification</span>
             <span>Quantity and destination</span>

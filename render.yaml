@@ -8,17 +8,7 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: SMTP_HOST
+      - key: RESEND_API_KEY
         sync: false
-      - key: SMTP_PORT
-        value: "587"
-      - key: SMTP_SECURE
-        value: "false"
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_PASS
-        sync: false
-      - key: SMTP_FROM
-        value: yogie@yogiecorp.com
       - key: INQUIRY_RECIPIENT
         value: Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com

@@ -20,7 +20,7 @@ Do not open `index.html` by double-clicking it for development; TypeScript and A
 
 ## Contact Form Email
 
-Copy `.env.example` to `.env` and fill in the real domain email SMTP settings from the email provider.
+Copy `.env.example` to `.env` and fill in the Resend API key and inquiry recipient list.
 
 ```bash
 cp .env.example .env
@@ -30,16 +30,11 @@ Important values:
 
 ```text
 VITE_API_URL=http://127.0.0.1:3002
-SMTP_HOST=
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=
-SMTP_PASS=
-SMTP_FROM=
+RESEND_API_KEY=
 INQUIRY_RECIPIENT=
 ```
 
-Until SMTP is configured, contact form submissions are saved locally in `data/inquiries.jsonl`.
+The Render backend also saves validated inquiry submissions locally in `data/inquiries.jsonl`.
 
 ## Build
 
@@ -58,7 +53,7 @@ Build Command: npm run build
 Output Directory: dist
 ```
 
-Add `VITE_API_URL` in Vercel Project Settings. Add the SMTP variables from `.env.example` in Render.
+Add `VITE_API_URL` in Vercel Project Settings. Add `RESEND_API_KEY` and `INQUIRY_RECIPIENT` in Render.
 
 ## Company Details
 

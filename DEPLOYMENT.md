@@ -27,12 +27,7 @@ Output Directory: dist
 Environment variables:
 
 ```text
-SMTP_HOST=
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=
-SMTP_PASS=
-SMTP_FROM=yogie@yogiecorp.com
+RESEND_API_KEY=
 INQUIRY_RECIPIENT=Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com
 ```
 
