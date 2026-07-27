@@ -1,13 +1,7 @@
-import cors from "cors";
-import "dotenv/config";
-import express from "express";
 import { randomUUID } from "node:crypto";
-import { appendFile, mkdir } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import nodemailer from "nodemailer";
 
-type ContactPayload = {
+type InquiryPayload = {
   name?: unknown;
   email?: unknown;
   phone?: unknown;
@@ -17,33 +11,26 @@ type ContactPayload = {
   message?: unknown;
 };
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, "..");
-const app = express();
-const port = Number(process.env.PORT ?? 3002);
+type VercelResponse = {
+  status: (code: number) => VercelResponse;
+  json: (body: unknown) => void;
+  setHeader: (name: string, value: string) => void;
+};
+
+type VercelRequest = {
+  method?: string;
+  headers?: {
+    origin?: string;
+  };
+  body?: InquiryPayload;
+};
+
 const allowedOrigins = new Set([
   "https://yogiecorp.com",
   "https://www.yogiecorp.com",
   "http://localhost:5173",
   "http://127.0.0.1:5173"
 ]);
-
-app.use(
-  cors({
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.has(origin)) {
-        callback(null, true);
-        return;
-      }
-
-      callback(new Error(`CORS blocked origin: ${origin}`));
-    }
-  })
-);
-app.use(express.json({ limit: "50kb" }));
 
 const clean = (value: unknown) =>
   typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
@@ -57,7 +44,19 @@ const hasSmtpConfig = () =>
       process.env.INQUIRY_RECIPIENT
   );
 
-function validateInquiry(body: ContactPayload = {}) {
+function setCorsHeaders(req: VercelRequest, res: VercelResponse) {
+  const origin = req.headers?.origin;
+
+  if (origin && allowedOrigins.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
+function validateInquiry(body: InquiryPayload = {}) {
   const name = clean(body.name);
   const email = clean(body.email).toLowerCase();
   const phone = clean(body.phone);
@@ -91,12 +90,6 @@ function validateInquiry(body: ContactPayload = {}) {
   };
 }
 
-async function saveInquiry(inquiry: Record<string, string>) {
-  const dataDir = path.join(rootDir, "data");
-  await mkdir(dataDir, { recursive: true });
-  await appendFile(path.join(dataDir, "inquiries.jsonl"), `${JSON.stringify(inquiry)}\n`);
-}
-
 async function sendInquiryEmail(inquiry: Record<string, string>) {
   if (!hasSmtpConfig()) {
     throw new Error("SMTP is not configured.");
@@ -120,23 +113,35 @@ async function sendInquiryEmail(inquiry: Record<string, string>) {
     text: [
       `Name: ${inquiry.name}`,
       `Email: ${inquiry.email}`,
-      `Phone: ${inquiry.phone || "Not provided"}`,
+      `Phone: ${inquiry.phone}`,
       `Product: ${inquiry.product}`,
-      `Quantity: ${inquiry.quantity || "Not provided"}`,
-      `Destination: ${inquiry.destination || "Not provided"}`,
+      `Quantity: ${inquiry.quantity}`,
+      `Destination: ${inquiry.destination}`,
       "",
       inquiry.message
     ].join("\n")
   });
-
-  return { sent: true };
 }
 
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true });
-});
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  setCorsHeaders(req, res);
 
-app.post("/api/inquiries", async (req, res) => {
+  const origin = req.headers?.origin;
+  if (origin && !allowedOrigins.has(origin)) {
+    res.status(403).json({ ok: false, error: "Request origin is not allowed." });
+    return;
+  }
+
+  if (req.method === "OPTIONS") {
+    res.status(204).json(null);
+    return;
+  }
+
+  if (req.method !== "POST") {
+    res.status(405).json({ ok: false, error: "Method not allowed." });
+    return;
+  }
+
   const result = validateInquiry(req.body);
 
   if ("error" in result) {
@@ -145,12 +150,8 @@ app.post("/api/inquiries", async (req, res) => {
   }
 
   try {
-    await saveInquiry(result.inquiry);
     await sendInquiryEmail(result.inquiry);
-    res.json({
-      ok: true,
-      message: "Inquiry sent successfully."
-    });
+    res.json({ ok: true, message: "Inquiry sent successfully." });
   } catch (error) {
     console.error("Inquiry submission failed:", {
       message: error instanceof Error ? error.message : String(error),
@@ -161,32 +162,4 @@ app.post("/api/inquiries", async (req, res) => {
       error: "Unable to submit inquiry right now. Please contact us directly."
     });
   }
-});
-
-app.post("/api/contact", async (req, res) => {
-  res.redirect(307, "/api/inquiries");
-});
-
-app.use((error: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error("API request failed:", {
-    message: error.message,
-    name: error.name
-  });
-
-  if (error instanceof SyntaxError) {
-    res.status(400).json({ ok: false, error: "Invalid JSON request body." });
-    return;
-  }
-
-  res.status(403).json({ ok: false, error: "Request origin is not allowed." });
-});
-
-const clientDist = path.join(rootDir, "dist");
-app.use(express.static(clientDist));
-app.use((_req, res) => {
-  res.sendFile(path.join(clientDist, "index.html"));
-});
-
-app.listen(port, () => {
-  console.log(`YOGIE CORPORATION server running on http://127.0.0.1:${port}`);
-});
+}

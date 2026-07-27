@@ -6,9 +6,9 @@ Network Solutions manages the domain and DNS. It does not automatically host thi
 
 The Network Solutions password was shared in chat. Change that password before updating DNS or giving access to anyone else.
 
-## Recommended Free Hosting
+## Recommended Hosting
 
-Use Vercel. This project includes `vercel.json` and Vercel serverless functions in `api/`.
+Use Render for the Node/Express backend and Vercel for the Vite frontend.
 
 Build command:
 
@@ -27,13 +27,19 @@ Output Directory: dist
 Environment variables:
 
 ```text
-CONTACT_TO=Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com
-CONTACT_FROM=yogie@yogiecorp.com
 SMTP_HOST=
 SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER=
 SMTP_PASS=
+SMTP_FROM=yogie@yogiecorp.com
+INQUIRY_RECIPIENT=Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com
+```
+
+In Vercel, add:
+
+```text
+VITE_API_URL=https://YOUR-RENDER-BACKEND.onrender.com
 ```
 
 ## Network Solutions DNS

@@ -416,6 +416,9 @@ document.querySelectorAll<HTMLAnchorElement>(".product-link").forEach((link) => 
 
 const form = document.querySelector<HTMLFormElement>("#contact-form");
 const status = document.querySelector<HTMLParagraphElement>(".form-status");
+const configuredApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+const apiUrl = configuredApiUrl || (import.meta.env.DEV ? "http://127.0.0.1:3002" : "");
+const inquiriesEndpoint = `${apiUrl}/api/inquiries`;
 
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -429,12 +432,18 @@ form?.addEventListener("submit", async (event) => {
   submit?.setAttribute("disabled", "true");
 
   try {
-    const response = await fetch("/api/contact", {
+    const response = await fetch(inquiriesEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-    const data = (await response.json()) as { ok: boolean; message?: string; error?: string };
+    const data = (await response
+      .json()
+      .catch(() => ({ ok: false, error: "The server returned an invalid response." }))) as {
+      ok: boolean;
+      message?: string;
+      error?: string;
+    };
 
     if (!response.ok || !data.ok) {
       throw new Error(data.error ?? "Unable to send inquiry.");
@@ -444,7 +453,11 @@ form?.addEventListener("submit", async (event) => {
     status.classList.add("success");
     form.reset();
   } catch (error) {
-    status.textContent = error instanceof Error ? error.message : "Unable to send inquiry.";
+    console.error("Inquiry submission failed:", error);
+    status.textContent =
+      error instanceof Error
+        ? error.message
+        : "Unable to submit inquiry. Please try again or contact us directly.";
     status.classList.add("error");
   } finally {
     submit?.removeAttribute("disabled");

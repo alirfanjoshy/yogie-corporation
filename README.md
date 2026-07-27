@@ -29,13 +29,14 @@ cp .env.example .env
 Important values:
 
 ```text
-CONTACT_TO=Liptonmourin@yogiecorp.com, akhtar@yogiecorp.com, yogie@yogiecorp.com
-CONTACT_FROM=yogie@yogiecorp.com
+VITE_API_URL=http://127.0.0.1:3002
 SMTP_HOST=
 SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER=
 SMTP_PASS=
+SMTP_FROM=
+INQUIRY_RECIPIENT=
 ```
 
 Until SMTP is configured, contact form submissions are saved locally in `data/inquiries.jsonl`.
@@ -47,7 +48,7 @@ npm run build
 npm start
 ```
 
-For deployment on Vercel, import the GitHub repo and use the default Vite settings. The `api/` folder contains Vercel serverless functions for the contact form.
+For deployment, deploy the backend to Render and the frontend to Vercel. The inquiry form posts to `${VITE_API_URL}/api/inquiries`.
 
 Vercel settings:
 
@@ -57,7 +58,7 @@ Build Command: npm run build
 Output Directory: dist
 ```
 
-Add the environment variables from `.env.example` in Vercel Project Settings.
+Add `VITE_API_URL` in Vercel Project Settings. Add the SMTP variables from `.env.example` in Render.
 
 ## Company Details
 
