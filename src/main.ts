@@ -365,6 +365,54 @@ const navLinks = document.querySelector<HTMLDivElement>(".nav-links");
 const pages = document.querySelectorAll<HTMLElement>(".page");
 const routeLinks = document.querySelectorAll<HTMLAnchorElement>("a[href^='#']");
 const validPages = new Set(["home", "products", "services", "about", "contact", "inquiry", "location"]);
+const canUseGlassCursor =
+  window.matchMedia("(pointer: fine)").matches &&
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (canUseGlassCursor) {
+  const cursor = document.createElement("div");
+  cursor.className = "cursor-glass";
+  cursor.setAttribute("aria-hidden", "true");
+  document.body.append(cursor);
+
+  let pointerX = window.innerWidth / 2;
+  let pointerY = window.innerHeight / 2;
+  let currentX = pointerX;
+  let currentY = pointerY;
+
+  const moveCursor = () => {
+    currentX += (pointerX - currentX) * 0.18;
+    currentY += (pointerY - currentY) * 0.18;
+    cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+    requestAnimationFrame(moveCursor);
+  };
+
+  window.addEventListener("pointermove", (event) => {
+    pointerX = event.clientX;
+    pointerY = event.clientY;
+    cursor.classList.add("is-visible");
+  });
+
+  window.addEventListener("pointerleave", () => {
+    cursor.classList.remove("is-visible");
+  });
+
+  document.addEventListener("mouseover", (event) => {
+    const target = event.target;
+    if (target instanceof Element && target.closest("a, button, input, select, textarea, .product-card")) {
+      cursor.classList.add("is-active");
+    }
+  });
+
+  document.addEventListener("mouseout", (event) => {
+    const target = event.target;
+    if (target instanceof Element && target.closest("a, button, input, select, textarea, .product-card")) {
+      cursor.classList.remove("is-active");
+    }
+  });
+
+  requestAnimationFrame(moveCursor);
+}
 
 function getCurrentPage() {
   const hash = window.location.hash.replace("#", "");
