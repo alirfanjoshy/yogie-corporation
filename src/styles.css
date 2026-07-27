@@ -712,7 +712,17 @@ h3 {
 }
 
 .quote-form {
+  color: var(--ink);
   box-shadow: 0 22px 70px rgba(0, 0, 0, 0.24);
+}
+
+.quote-form .form-heading h3,
+.quote-form label {
+  color: var(--ink);
+}
+
+.quote-form .form-heading p {
+  color: var(--muted);
 }
 
 .about-image {
